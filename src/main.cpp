@@ -1,33 +1,32 @@
 #include <Arduino.h>
 #include "SolenoidMatrix.h"
 
-/* Each solenoid must not be turned on
-   for longer than `000 ms per 2000 ms
-   The state of solenoids will be updated
-   with 50 ms time period or 20Hz.
-   That gives one possible solution to
-   keep track of time on per period: 
-   circular buffer
+#define TICK_TIME 50  // Update solenoids each 50ms
 
-   We can create an array of 100 elements (or 100-byte number)
-   and each 50ms we shift all its elements to the left 
-   and add current state to the right element (1 or 0).
-   When the sum of array is 50 or more we ignore turning on.
-   That will prevent 
-     */
-#define DISCRETISATION_PERIOD = 50  // ms
-#define MAX_TURN_ON_TIME = 1000     // ms
-#define ATTENTION_WINDOW = 2000     // ms
-
-
+uint64_t time_stamp_1 = millis();
+uint64_t time_stamp_2 = millis();
 
 void setup() {
-  pinMode(13, OUTPUT);
+  uint8_t solenoid_pins = {12,11,10,9,8,7,6,5,3};
+  SolenoidMatrix mySolenoidMatrix(solenoid_pins);
+  Serial.begin(9600);
 }
 
+// On Serial parsing: https://www.programmingelectronics.com/serial-read/
 void loop() {
-  digitalWrite(13, HIGH);
-  delay(500);
-  digitalWrite(13, LOW);
-  delay(500);
+
+  // Get latest request
+  static int16_t incomming_request;
+  while (Serial.available() > 0){
+    incomming_request = Serial.read();
+  }
+  
+  // Update Solenoids each 50ms
+  uint64_t time_stamp_1 = millis();
+  if (time_stamp_1 - time_stamp_2 > TICK_TIME){
+
+    time_stamp_2 = millis();
+  }
+
+  
 }
