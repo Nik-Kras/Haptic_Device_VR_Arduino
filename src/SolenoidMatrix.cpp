@@ -7,12 +7,13 @@
 // Initializes all 9 Solenoids,
 // Each of them activates its pin and resets its timer
 SolenoidMatrix::SolenoidMatrix(uint8_t* set_pin_array) {
-    assert(sizeof(set_pin_array) == NUM_OF_SOLENOIDS);
+    // len(set_pin_array) == 9
     solenoids = (Solenoid*) malloc(NUM_OF_SOLENOIDS*sizeof(Solenoid));
     for (int i; i < NUM_OF_SOLENOIDS; i++){
         solenoids[i] = Solenoid(set_pin_array[i]);
         solenoid_states[i] = false;
     }
+    time_on_left = 0;
 }
 
 bool SolenoidMatrix::CheckSolenoidsAreReady(bool* array_solenoid_states){
