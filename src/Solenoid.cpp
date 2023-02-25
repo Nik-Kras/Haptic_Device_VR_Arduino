@@ -1,11 +1,15 @@
 #include "Arduino.h"
 #include "Solenoid.h"
-#include <algorithm>
+#include <math.h>
 
 Solenoid::Solenoid(uint8_t set_pin) {
     pin = set_pin;
     turn_on = 0;
     pinMode(pin, OUTPUT);
+}
+
+void Solenoid::SetTimer(uint16_t set_time){
+    turn_on = set_time;
 }
 
 // Updates actual solenoid state
@@ -22,6 +26,6 @@ void Solenoid::UpdateSolenoidState(bool new_state){
     }
 }
 
-uint32_t Solenoid::TimeOnLeft(){
-    return MAX_TURN_ON_TIME - turn_on;
+bool Solenoid::SolenoidIsReady(){
+    return turn_on == 0;
 }
