@@ -22,7 +22,10 @@ NOTE ON SOLENOIDS:
 uint64_t time_stamp_1 = millis();
 uint64_t time_stamp_2 = millis();
 uint8_t solenoid_pins[] = {12,11,10,9,8,7,6,5,3};
-bool solenoid_states[] = {false,false,false,false,false,false,false,false,false};                 
+bool solenoid_states[] = {false,false,false,false,false,false,false,false,false};        
+
+SolenoidMatrix mySolenoidMatrix(solenoid_pins);
+CommunicationDriver myCommunication(Serial);
 
 void printNewSolenoidStates(bool* array_to_print){
   for (int i = 0; i<9; i++){
@@ -38,21 +41,14 @@ void printNewSolenoidStates(bool* array_to_print){
   }
 }
 
-void clearSerialBuffer() {
-  // Serial.println("Clearing buffer...");
-  while (Serial.available() > 0) {
-    Serial.read();
-    // Serial.print("Available: ");
-    // Serial.println(Serial.available());
-  }
-}
+
 
 void setup() {
+
   Serial.begin(9600);
-  Serial.setTimeout(100); // Set timeout to 100 ms for functions like Serial.readString()
+  myCommunication.begin();
 
   pinMode(13, OUTPUT);
-
   for (int i = 0; i < 3; i ++){
     digitalWrite(13, HIGH);
     delay(500);
@@ -69,9 +65,6 @@ void setup() {
 
 void loop() {
 
-  static SolenoidMatrix mySolenoidMatrix(solenoid_pins);
-  static CommunicationDriver myCommunication;
-
   // Read the message
   if (myCommunication.MessageWaits()){
 
@@ -81,6 +74,9 @@ void loop() {
     // Serial.print(Serial.available());
 
     static uint16_t message = myCommunication.ReadMessage();
+    // String teststr = Serial.readString();  //read until timeout
+    // teststr.trim();
+    // uint16_t message = (uint16_t)atoi(teststr.c_str());
     static uint16_t solenoid_time = myCommunication.ExtractTime(message);
 
     Serial.print("Received number: ");
@@ -90,8 +86,7 @@ void loop() {
     // Serial.print(" solenoid_time = ");
     // Serial.println(solenoid_time);
 
-    clearSerialBuffer();
-
+    myCommunication.clearSerialBuffer();
     myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
     if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
       mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time); 

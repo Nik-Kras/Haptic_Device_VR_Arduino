@@ -26,13 +26,16 @@
 class CommunicationDriver {
 
 public:
-    
-    CommunicationDriver();
+    CommunicationDriver(HardwareSerial& my_Serial);
+    void begin();
+    void clearSerialBuffer();
     bool MessageWaits();
     uint16_t ReadMessage();
     uint16_t ExtractTime(uint16_t message);
     void fillArrayFrom16BitMessage(uint16_t message, bool (&array)[NUM_OF_SOLENOIDS]);
 
+private:
+    HardwareSerial& serial_port;
 };
 
 #endif
