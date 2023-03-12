@@ -41,12 +41,13 @@ void SolenoidMatrix::SetSolenoidPattern(bool array_solenoid_states[NUM_OF_SOLENO
 void SolenoidMatrix::UpdateSolenoidMatrix(){
     /* API to be called each 50ms. Updates timer and states for all solenoids */
     
-    for (int i = 0; i < 9; i++){
-        Serial.print("Solenoid #");
-        Serial.print(i);
-        Serial.print(" State: ");
-        Serial.println(solenoid_states[i]);
-    }
+    // DEBUG
+    // for (int i = 0; i < 9; i++){
+    //     Serial.print("Solenoid #");
+    //     Serial.print(i);
+    //     Serial.print(" State: ");
+    //     Serial.println(solenoid_states[i]);
+    // }
     
     if (time_on_left > 0){
         for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
@@ -57,6 +58,7 @@ void SolenoidMatrix::UpdateSolenoidMatrix(){
     }else{
         for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
             solenoids[i].UpdateSolenoidState(false);
+            solenoid_states[i] = false;
         }
     }
 }

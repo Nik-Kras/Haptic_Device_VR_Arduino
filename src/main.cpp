@@ -120,14 +120,16 @@ void loop() {
   // Serial.println(4);
 
   // delay(2000);
-  // static int cnt = 0;
 
-  // if (cnt < 10){
-  //   Serial.println("Updating Solenoids: ");
-  //   cnt++;
-  //   mySolenoidMatrix.UpdateSolenoidMatrix();
-  //   time_stamp_2 = millis();
-  //   delay(50);
-  // }
+  static int cnt = 0;
+  if (cnt < 20){
+    cnt++;
+    // DEBUG
+    // Serial.print("Update #");
+    // Serial.println(cnt);
+    mySolenoidMatrix.UpdateSolenoidMatrix();
+    time_stamp_2 = millis();
+    delay(50);
+  }
   
 }
