@@ -11,11 +11,11 @@ class Solenoid {
 
 public:
     uint8_t pin;
-    uint16_t turn_on;
+    int16_t turn_on;
     
     Solenoid();
     void SetPin(uint8_t set_pin);
-    void SetTimer(uint16_t set_time);
+    void SetTimer(int16_t set_time);
     void UpdateSolenoidState(bool new_state);
     bool SolenoidIsReady();
 

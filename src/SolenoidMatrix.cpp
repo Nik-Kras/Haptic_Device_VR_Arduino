@@ -22,18 +22,35 @@ bool SolenoidMatrix::CheckSolenoidsAreReady(bool* array_solenoid_states){
     // For each solenoid that will be used we check if it rested enough and ready to be used
     bool all_solenoids_are_aready = true;
     for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
+
+        // DEBUG
+        // Serial.print("Checking Solenoid #");
+        // Serial.print(i);
+        // Serial.print(" ");
+        // bool ready = solenoids[i].SolenoidIsReady();
+        // Serial.print(" State: ");
+        // Serial.println(ready);
+
         if (array_solenoid_states[i]){
             all_solenoids_are_aready = solenoids[i].SolenoidIsReady();
         }
         if (all_solenoids_are_aready == false){ break; }
     }
+    // Serial.print("Total Ready: ");
+    // Serial.println(all_solenoids_are_aready);
     return all_solenoids_are_aready;
 }
 
-void SolenoidMatrix::SetSolenoidPattern(bool array_solenoid_states[NUM_OF_SOLENOIDS], uint16_t time){
+void SolenoidMatrix::SetSolenoidPattern(bool array_solenoid_states[NUM_OF_SOLENOIDS], int16_t time){
     assert(time <= 1000);
     for (int i = 0; i < NUM_OF_SOLENOIDS; i++){
         solenoid_states[i] = array_solenoid_states[i];
+
+        // // DEBUG
+        // Serial.print("SET Solenoid #");
+        // Serial.print(i);
+        // Serial.print(" to State ");
+        // Serial.println(solenoid_states[i]);
     }
     time_on_left = time;
 }

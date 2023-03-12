@@ -52,62 +52,56 @@ void setup() {
 
   delay(100);
   Serial.println("Start!");
-  Serial.println("Let's do it");
+  Serial.println("Version v1");
   delay(100);
 
 }
 
 void loop() {
 
-  // Serial.println("New Loop");
-
-  // Serial.println(1);
-
   static SolenoidMatrix mySolenoidMatrix(solenoid_pins);
   static CommunicationDriver myCommunication;
 
-  // Serial.println(2);
-
   // Read the message
-  // if (myCommunication.MessageWaits()){
+  if (myCommunication.MessageWaits()){
+    // Serial.print("Available bytes: ");
+    // Serial.println(Serial.available());
+
+    static uint16_t message = myCommunication.ReadMessage();
+    static uint16_t solenoid_time = myCommunication.ExtractTime(message);
+    myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
+    if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
+      mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time); 
+    }
+    // Serial.println("Final Pattern:");
+    // printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
+  }
+
+  // DEBUG - Single Message
+  // static bool b = true;
+  // if (b){
+  //   b = false;
   //   Serial.println("Available: ");
   //   Serial.println(Serial.available());
 
-  //   static uint16_t message = myCommunication.ReadMessage();
+  //   static uint16_t message = 5393;
   //   static uint16_t solenoid_time = myCommunication.ExtractTime(message);
+  //   Serial.println("Mesage: ");
+  //   Serial.println(message);
+  //   Serial.println("Time: ");
+  //   Serial.println(solenoid_time);
+
+  //   Serial.println("Before: ");
+  //   printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
+
   //   myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
   //   if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
   //     mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time);  // Put the message data into Solenoid Matrix
   //   }
+
+  //   Serial.println("After: ");
   //   printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
   // }
-
-  static bool b = true;
-  if (b){
-    b = false;
-    Serial.println("Available: ");
-    Serial.println(Serial.available());
-
-    static uint16_t message = 5393;
-    static uint16_t solenoid_time = myCommunication.ExtractTime(message);
-    Serial.println("Mesage: ");
-    Serial.println(message);
-    Serial.println("Time: ");
-    Serial.println(solenoid_time);
-
-    Serial.println("Before: ");
-    printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
-
-    myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
-    if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
-      mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time);  // Put the message data into Solenoid Matrix
-    }
-
-    Serial.println("After: ");
-    printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
-  }
-
-  // Serial.println(3);
 
   // Update Solenoids each 50ms
   // time_stamp_1 = millis();
@@ -117,19 +111,11 @@ void loop() {
   //   Serial.println("Timer");
   // }
 
-  // Serial.println(4);
-
-  // delay(2000);
-
-  static int cnt = 0;
-  if (cnt < 20){
-    cnt++;
-    // DEBUG
-    // Serial.print("Update #");
-    // Serial.println(cnt);
-    mySolenoidMatrix.UpdateSolenoidMatrix();
-    time_stamp_2 = millis();
-    delay(50);
-  }
+  // DEBUG
+  // Serial.print("Update #");
+  // Serial.println(cnt);
+  mySolenoidMatrix.UpdateSolenoidMatrix();
+  time_stamp_2 = millis();
+  delay(50);
   
 }

@@ -13,11 +13,11 @@ class SolenoidMatrix {
 public:
     Solenoid solenoids[NUM_OF_SOLENOIDS];
     bool solenoid_states[NUM_OF_SOLENOIDS];
-    uint16_t time_on_left;
+    int16_t time_on_left;
     
     SolenoidMatrix(uint8_t* set_pin_array);
     bool CheckSolenoidsAreReady(bool* array_solenoid_states);
-    void SetSolenoidPattern(bool* array_solenoid_states, uint16_t time);
+    void SetSolenoidPattern(bool* array_solenoid_states, int16_t time);
     void UpdateSolenoidMatrix();
 
 };
