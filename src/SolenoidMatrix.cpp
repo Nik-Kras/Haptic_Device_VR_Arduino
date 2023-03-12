@@ -8,9 +8,10 @@
 // Each of them activates its pin and resets its timer
 SolenoidMatrix::SolenoidMatrix(uint8_t* set_pin_array) {
     // len(set_pin_array) == 9
-    solenoids = (Solenoid*) malloc(NUM_OF_SOLENOIDS*sizeof(Solenoid));
+    // solenoids = (Solenoid*) malloc(NUM_OF_SOLENOIDS*sizeof(Solenoid));
+    solenoids = new Solenoid[NUM_OF_SOLENOIDS]();
     for (int i; i < NUM_OF_SOLENOIDS; i++){
-        solenoids[i] = Solenoid(set_pin_array[i]);
+        solenoids[i].SetPin(set_pin_array[i]);
         solenoid_states[i] = false;
     }
     time_on_left = 0;
@@ -37,15 +38,23 @@ void SolenoidMatrix::SetSolenoidPattern(bool* array_solenoid_states, uint16_t ti
 
 void SolenoidMatrix::UpdateSolenoidMatrix(){
     /* API to be called each 50ms. Updates timer and states for all solenoids */
+    
+    for (int i = 0; i < 9; i++){
+        Serial.print("Solenoid #");
+        Serial.print(i);
+        Serial.print(" State: ");
+        Serial.println(solenoid_states[i]);
+    }
+    
     if (time_on_left > 0){
         for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
-            solenoids->UpdateSolenoidState(solenoid_states[i]);
+            solenoids[i].UpdateSolenoidState(solenoid_states[i]);
         }
         time_on_left -= DISCRETISATION_PERIOD;
         time_on_left = max(0, time_on_left);
     }else{
         for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
-            solenoids->UpdateSolenoidState(false);
+            solenoids[i].UpdateSolenoidState(false);
         }
     }
 }

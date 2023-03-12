@@ -2,9 +2,12 @@
 #include "Solenoid.h"
 #include <math.h>
 
-Solenoid::Solenoid(uint8_t set_pin) {
-    pin = set_pin;
+Solenoid::Solenoid() {
     turn_on = 0;
+}
+
+void Solenoid::SetPin(uint8_t set_pin){
+    pin = set_pin;
     pinMode(pin, OUTPUT);
 }
 

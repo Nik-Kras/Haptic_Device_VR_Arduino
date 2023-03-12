@@ -95,21 +95,10 @@ void loop() {
     Serial.println("Time: ");
     Serial.println(solenoid_time);
 
-    Serial.println("Solenoid states before the message: ");
-    for (int i = 0; i < 9; i++){
-      Serial.println(solenoid_states[i]);
-    }
-
     myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
     if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
       mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time);  // Put the message data into Solenoid Matrix
     }
-
-    Serial.println("Solenoid states after the message: ");
-    for (int i = 0; i < 9; i++){
-      Serial.println(solenoid_states[i]);
-    }
-
     printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
   }
 
@@ -126,11 +115,13 @@ void loop() {
   // Serial.println(4);
 
   // delay(2000);
+  static int cnt = 0;
+
+  if (cnt < 10){
+    cnt++;
+    mySolenoidMatrix.UpdateSolenoidMatrix();
+    time_stamp_2 = millis();
+    delay(50);
+  }
   
-
-  mySolenoidMatrix.UpdateSolenoidMatrix();
-  time_stamp_2 = millis();
-  // Serial.println("Timer");
-  delay(50);
-
 }
