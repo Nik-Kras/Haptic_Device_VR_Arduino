@@ -41,12 +41,19 @@ void printNewSolenoidStates(bool* array_to_print){
   }
 }
 
-
+void clearSerialBuffer() {
+  // Serial.println("Clearing buffer...");
+  while (Serial.available() > 0) {
+    Serial.read();
+    // Serial.println(Serial.read());
+  }
+}
 
 void setup() {
 
   Serial.begin(9600);
-  myCommunication.begin();
+  Serial.setTimeout(10);
+  // myCommunication.begin();
 
   pinMode(13, OUTPUT);
   for (int i = 0; i < 3; i ++){
@@ -66,27 +73,14 @@ void setup() {
 void loop() {
 
   // Read the message
-  if (myCommunication.MessageWaits()){
+  if (Serial.available() >= 6){
 
-    Serial.println("Processing...");
-
-    // Serial.print("Available bytes: ");
-    // Serial.print(Serial.available());
-
-    static uint16_t message = myCommunication.ReadMessage();
-    // String teststr = Serial.readString();  //read until timeout
-    // teststr.trim();
-    // uint16_t message = (uint16_t)atoi(teststr.c_str());
+    String teststr = Serial.readString();  //read until timeout
+    teststr.trim();
+    uint16_t message = (uint16_t)atoi(teststr.c_str());
     static uint16_t solenoid_time = myCommunication.ExtractTime(message);
+    clearSerialBuffer();
 
-    Serial.print("Received number: ");
-    Serial.println(message);
-    // Serial.print(" message = ");
-    // Serial.print(message);
-    // Serial.print(" solenoid_time = ");
-    // Serial.println(solenoid_time);
-
-    myCommunication.clearSerialBuffer();
     myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
     if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
       mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time); 
@@ -96,32 +90,6 @@ void loop() {
     // Serial.println("Final Pattern:");
     // printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
   }
-
-  // DEBUG - Single Message
-  // static bool b = true;
-  // if (b){
-  //   b = false;
-  //   Serial.println("Available: ");
-  //   Serial.println(Serial.available());
-
-  //   static uint16_t message = 5393;
-  //   static uint16_t solenoid_time = myCommunication.ExtractTime(message);
-  //   Serial.println("Mesage: ");
-  //   Serial.println(message);
-  //   Serial.println("Time: ");
-  //   Serial.println(solenoid_time);
-
-  //   Serial.println("Before: ");
-  //   printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
-
-  //   myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
-  //   if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
-  //     mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time);  // Put the message data into Solenoid Matrix
-  //   }
-
-  //   Serial.println("After: ");
-  //   printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
-  // }
 
   // Update Solenoids each 50ms
   // time_stamp_1 = millis();
