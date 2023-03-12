@@ -66,12 +66,16 @@ void SolenoidMatrix::UpdateSolenoidMatrix(){
     //     Serial.println(solenoid_states[i]);
     // }
     
+
     if (time_on_left > 0){
         for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
             solenoids[i].UpdateSolenoidState(solenoid_states[i]);
         }
         time_on_left -= DISCRETISATION_PERIOD;
         time_on_left = max(0, time_on_left);
+
+        Serial.print("Time ON left ");
+        Serial.println(time_on_left);
     }else{
         for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
             solenoids[i].UpdateSolenoidState(false);

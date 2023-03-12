@@ -40,6 +40,7 @@ void printNewSolenoidStates(bool* array_to_print){
 
 void setup() {
   Serial.begin(9600);
+  Serial.setTimeout(100); // Set timeout to 100 ms for functions like Serial.readString()
 
   pinMode(13, OUTPUT);
 
@@ -64,15 +65,26 @@ void loop() {
 
   // Read the message
   if (myCommunication.MessageWaits()){
+
+    // Serial.println("Processing...");
+
     // Serial.print("Available bytes: ");
-    // Serial.println(Serial.available());
+    // Serial.print(Serial.available());
 
     static uint16_t message = myCommunication.ReadMessage();
     static uint16_t solenoid_time = myCommunication.ExtractTime(message);
+
+    // Serial.print(" message = ");
+    // Serial.print(message);
+    // Serial.print(" solenoid_time = ");
+    // Serial.println(solenoid_time);
+
     myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
     if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
       mySolenoidMatrix.SetSolenoidPattern(solenoid_states, solenoid_time); 
     }
+    // Serial.print("Given Time: ");
+    // Serial.println(solenoid_time);
     // Serial.println("Final Pattern:");
     // printNewSolenoidStates(mySolenoidMatrix.solenoid_states);
   }

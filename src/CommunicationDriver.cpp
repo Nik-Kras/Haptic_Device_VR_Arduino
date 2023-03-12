@@ -6,7 +6,7 @@ CommunicationDriver::CommunicationDriver(){}
 
 bool CommunicationDriver::MessageWaits(){
     /* API to check if 16b message is ready to read*/
-    return Serial.available() >= 2;
+    return Serial.available() >= 6;
 }
 
 uint16_t CommunicationDriver::ReadMessage(){
@@ -18,6 +18,14 @@ uint16_t CommunicationDriver::ReadMessage(){
     // return message;
 
     String teststr = Serial.readString();  //read until timeout
+    
+    // Clear RX Serial buffer
+    // Serial.println("Started Clearing");
+    while (Serial.available() > 0) {
+        Serial.read(); 
+        // Serial.println("Clearing...");
+    }
+
     teststr.trim();
     uint16_t message = (uint16_t)atoi(teststr.c_str());
     Serial.print("Received number: ");
