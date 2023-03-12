@@ -7,6 +7,9 @@ Solenoid::Solenoid() {
 }
 
 void Solenoid::SetPin(uint8_t set_pin){
+    Serial.print("Pin: ");
+    Serial.print(set_pin);
+    Serial.println(" is set to OUTPUT");
     pin = set_pin;
     pinMode(pin, OUTPUT);
 }

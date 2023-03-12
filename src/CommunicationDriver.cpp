@@ -37,5 +37,11 @@ void CommunicationDriver::fillArrayFrom16BitMessage(uint16_t message, bool (&arr
     /* API to fill solenoid states array from the message */
     for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
         array[i] = message & (1 << i); // extract the i-th bit of the message and store it in the array
+        
+        // DEBUG
+        // Serial.print("Array ");
+        // Serial.print(i);
+        // Serial.print(" = ");
+        // Serial.println(array[i]);
     }
 }

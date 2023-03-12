@@ -9,7 +9,7 @@
 SolenoidMatrix::SolenoidMatrix(uint8_t* set_pin_array) {
     // len(set_pin_array) == 9
     // solenoids = (Solenoid*) malloc(NUM_OF_SOLENOIDS*sizeof(Solenoid));
-    solenoids = new Solenoid[NUM_OF_SOLENOIDS]();
+    // solenoids = new Solenoid[NUM_OF_SOLENOIDS]();
     for (int i; i < NUM_OF_SOLENOIDS; i++){
         solenoids[i].SetPin(set_pin_array[i]);
         solenoid_states[i] = false;
@@ -30,9 +30,11 @@ bool SolenoidMatrix::CheckSolenoidsAreReady(bool* array_solenoid_states){
     return all_solenoids_are_aready;
 }
 
-void SolenoidMatrix::SetSolenoidPattern(bool* array_solenoid_states, uint16_t time){
+void SolenoidMatrix::SetSolenoidPattern(bool array_solenoid_states[NUM_OF_SOLENOIDS], uint16_t time){
     assert(time <= 1000);
-    solenoid_states = array_solenoid_states;
+    for (int i = 0; i < NUM_OF_SOLENOIDS; i++){
+        solenoid_states[i] = array_solenoid_states[i];
+    }
     time_on_left = time;
 }
 

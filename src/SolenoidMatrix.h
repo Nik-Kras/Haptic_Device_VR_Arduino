@@ -11,8 +11,8 @@
 class SolenoidMatrix {
 
 public:
-    Solenoid* solenoids;
-    bool* solenoid_states;
+    Solenoid solenoids[NUM_OF_SOLENOIDS];
+    bool solenoid_states[NUM_OF_SOLENOIDS];
     uint16_t time_on_left;
     
     SolenoidMatrix(uint8_t* set_pin_array);
