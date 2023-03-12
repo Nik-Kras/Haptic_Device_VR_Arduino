@@ -31,7 +31,7 @@ public:
     bool MessageWaits();
     uint16_t ReadMessage();
     uint16_t ExtractTime(uint16_t message);
-    void fillArrayFrom16BitMessage(uint16_t message, bool array[NUM_OF_SOLENOIDS]);
+    void fillArrayFrom16BitMessage(uint16_t message, bool (&array)[NUM_OF_SOLENOIDS]);
 
 };
 
