@@ -74,8 +74,8 @@ void SolenoidMatrix::UpdateSolenoidMatrix(){
         time_on_left -= DISCRETISATION_PERIOD;
         time_on_left = max(0, time_on_left);
 
-        Serial.print("Time ON left ");
-        Serial.println(time_on_left);
+        // Serial.print("Time ON left ");
+        // Serial.println(time_on_left);
     }else{
         for (int i = 0; i < NUM_OF_SOLENOIDS; i++) {
             solenoids[i].UpdateSolenoidState(false);

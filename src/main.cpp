@@ -38,6 +38,15 @@ void printNewSolenoidStates(bool* array_to_print){
   }
 }
 
+void clearSerialBuffer() {
+  // Serial.println("Clearing buffer...");
+  while (Serial.available() > 0) {
+    Serial.read();
+    // Serial.print("Available: ");
+    // Serial.println(Serial.available());
+  }
+}
+
 void setup() {
   Serial.begin(9600);
   Serial.setTimeout(100); // Set timeout to 100 ms for functions like Serial.readString()
@@ -66,7 +75,7 @@ void loop() {
   // Read the message
   if (myCommunication.MessageWaits()){
 
-    // Serial.println("Processing...");
+    Serial.println("Processing...");
 
     // Serial.print("Available bytes: ");
     // Serial.print(Serial.available());
@@ -74,10 +83,14 @@ void loop() {
     static uint16_t message = myCommunication.ReadMessage();
     static uint16_t solenoid_time = myCommunication.ExtractTime(message);
 
+    Serial.print("Received number: ");
+    Serial.println(message);
     // Serial.print(" message = ");
     // Serial.print(message);
     // Serial.print(" solenoid_time = ");
     // Serial.println(solenoid_time);
+
+    clearSerialBuffer();
 
     myCommunication.fillArrayFrom16BitMessage(message, solenoid_states);
     if (mySolenoidMatrix.CheckSolenoidsAreReady(solenoid_states)){
